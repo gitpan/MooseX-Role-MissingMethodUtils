@@ -1,7 +1,9 @@
 package MooseX::Role::MissingMethodUtils;
+{
+  $MooseX::Role::MissingMethodUtils::VERSION = '0.002';
+}
 
 use Moose::Role;
-our $VERSION = '0.01';
 
 sub AUTOLOAD
 {
@@ -20,6 +22,24 @@ sub AUTOLOAD
     return;
 }
 
+sub can
+{
+    my ($self, $method) = @_;
+
+    my $meth_ref = $self->SUPER::can( $method ); 
+    
+    return $meth_ref if $meth_ref;
+
+    if ( $self->can("responds_to") ) 
+    {
+        if ( my $meth_ref = $self->responds_to($method) )  
+        {
+            no strict 'refs'; 
+            return *{ $method } = $meth_ref;
+        }
+    }
+}
+
 1;
 
 # ABSTRACT: Getting rid of boilerplate AUTOLOAD stuff
@@ -36,7 +56,7 @@ MooseX::Role::MissingMethodUtils - Getting rid of boilerplate AUTOLOAD stuff
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -53,6 +73,17 @@ version 0.001
         }
     }
 
+    sub responds_to {
+        my ($self, $method_name) = @_;
+
+        if ( $method_name =~ /foo/ )
+        {
+            return sub {
+                print "Bar";
+            }
+        }
+    }
+
 =head1 DESCRIPTION
 
 This role will now introduce a method named method_missing. This method is called via AUTOLOAD as a last
@@ -60,15 +91,27 @@ resort in the calling chain.
 
 Three parameters will be passed in to help with delegation: ref to self,method name, and parameters.
 
+=head1 CALLBACKS
+
+=head2 method_missing
+
+Call back method that is called during the AUTOLOAD phase. It's unable to find
+a method and will call this method_missing as last resort for delegation.
+
+=head2 responds_to
+
+Call back method that is called during a "can" call. This method needs to just
+return a sub ref.
+
 =head1 METHODS
 
 =head2 AUTOLOAD
 
-Just does all the boilerplate autoloading stuff.
+Just does all the boilerplate autoloading stuff. Will call "method_missing"
 
-=head1 TODO
+=head2 can
 
-Add some other useful methods and filter capabilities.
+A subclass of can, will call "responds_to" if nothing is found in super.
 
 =head1 AUTHOR
 

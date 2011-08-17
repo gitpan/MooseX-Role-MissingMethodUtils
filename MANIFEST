@@ -7,4 +7,5 @@ dist.ini
 lib/MooseX/Role/MissingMethodUtils.pm
 t/01_load.t
 t/02_delegate.t
+t/03_responds_to.t
 t/lib/Foo.pm

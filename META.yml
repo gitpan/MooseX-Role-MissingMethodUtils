@@ -16,4 +16,4 @@ meta-spec:
 name: MooseX-Role-MissingMethodUtils
 requires:
   Moose::Role: 0
-version: 0.001
+version: 0.002
