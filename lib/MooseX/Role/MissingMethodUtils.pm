@@ -1,6 +1,6 @@
 package MooseX::Role::MissingMethodUtils;
 {
-  $MooseX::Role::MissingMethodUtils::VERSION = '0.002';
+  $MooseX::Role::MissingMethodUtils::VERSION = '0.02';
 }
 
 use Moose::Role;
@@ -56,7 +56,7 @@ MooseX::Role::MissingMethodUtils - Getting rid of boilerplate AUTOLOAD stuff
 
 =head1 VERSION
 
-version 0.002
+version 0.02
 
 =head1 SYNOPSIS
 
